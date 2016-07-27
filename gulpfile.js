@@ -3,6 +3,7 @@ var gulp = require('gulp');
 var postcss = require('gulp-postcss');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
+var plumber = require('gulp-plumber');
 // optimising media queries is a bad idea
 // js
 var uglify = require('gulp-uglify');
@@ -13,7 +14,8 @@ var include = require('gulp-include');
 // css + js
 // var rename = require('gulp-rename');
 var sourcemaps = require('gulp-sourcemaps');
-// var gzip = require('gulp-gzip');
+var notify = require('gulp-notify');
+
 
 var paths = {
     sassSrc: 'source/sass/*.scss',
@@ -27,12 +29,20 @@ var paths = {
 // Production style
 var inProduction = false;
 
+var onError = function(err) {
+    notify.onError({
+      title:    "Gulp error in " + err.plugin,
+      Error: "<%= error.message %>"
+    })(err);
+    this.emit('end');
+};
 
 gulp.task('sass', function () {
     if (!inProduction) {
         gulp.src(paths.sassSrc)
+            .pipe(plumber({errorHandler: onError}))
             .pipe(sourcemaps.init())
-                .pipe(sass({outputStyle: 'compressed'}))
+                .pipe(sass())
                 .pipe(autoprefixer({
                     browsers: ['> 1%', 'IE 7'], 
                     remove: true 
@@ -42,6 +52,7 @@ gulp.task('sass', function () {
             .pipe(gulp.dest(paths.dist));
     } else {
         gulp.src(paths.sassSrc)
+            .pipe(plumber({errorHandler: onError}))
             .pipe(sass({outputStyle: 'compressed'}))
             .pipe(autoprefixer({
                 browsers: ['> 1%', 'IE 7'], 
