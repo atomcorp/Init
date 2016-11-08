@@ -81,10 +81,13 @@ gulp.task('js',function() {
             .pipe(gulp.dest(paths.dist));
     }
 });
- 
-gulp.task('default',function() {
+
+gulp.task('watch',function() {
     gulp.watch(paths.sassSrc, ['sass']);
     gulp.watch(paths.watchSass, ['sass']);
     gulp.watch(paths.jsComponents, ['js']);
     gulp.watch(paths.jsSrc, ['js']);
 });
+
+// run sass + js watch for any more changes
+gulp.task('default', ['sass', 'js', 'watch']);
