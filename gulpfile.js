@@ -81,7 +81,7 @@ gulp.task('js',function() {
             .pipe(gulp.dest(paths.dist));
     }
 });
- 
+
 gulp.task('watch',function() {
     gulp.watch(paths.sassSrc, ['sass']);
     gulp.watch(paths.watchSass, ['sass']);
@@ -91,5 +91,3 @@ gulp.task('watch',function() {
 
 // run sass + js watch for any more changes
 gulp.task('default', ['sass', 'js', 'watch']);
-
-gulp.task('compile', ['sassCompile','jsCompile']);
